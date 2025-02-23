@@ -1,0 +1,159 @@
+<?xml version="1.0"?>
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro">
+    <!-- Base Link -->
+    <link name="base_footprint" />
+    
+    <joint name="base_joint" type="fixed">
+        <parent link="base_footprint" />
+        <child link="base_link" />
+        <origin xyz="0 0 ${wheel_radius/2}" rpy="0 0 0" />
+    </joint>
+      
+    <link name="base_link">
+        <visual>
+          <origin xyz="0 0 ${base_size_z/2 + wheel_radius/2}" rpy="0 0 0" />
+          <geometry>
+            <box size="${base_size_x} ${base_size_y} ${base_size_z}" />
+          </geometry>
+          <material name="grey" />
+        </visual>
+        <collision>
+          <origin xyz="0 0 ${base_size_z/2 + wheel_radius/2}" rpy="0 0 0" />
+          <geometry>   
+            <box size="${base_size_x} ${base_size_y} ${base_size_z}" />
+          </geometry>
+        </collision>
+        <inertial>
+          <origin xyz="0 0 ${base_size_z/2 + wheel_radius/2}" rpy="0 0 0"/>
+          <mass value="${base_mass}"/>
+          <xacro:box_inertia m="${base_mass}" x="${base_size_x}" y="${base_size_y}" z="${base_size_z}"/>
+        </inertial>
+    </link>
+
+    <!-- Forward lelf wheel -->
+
+    <joint name="fl_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="fl_wheel_link"/>
+        <origin xyz="${wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 ${M_PI/2}"/>
+        <axis xyz="1 0 0" rpy="0 0 0"/>
+    </joint>
+
+  <link name="fl_wheel_link">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 ${-M_PI/2} 0" />
+          <geometry>
+            <!-- <mesh filename="package://robot_description/meshes/fl_wheel_link.STL" scale="1 1 1" /> -->
+            <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+          </geometry>
+          <material name="darkgrey" />
+        </visual>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 ${-M_PI/2} 0" />
+          <geometry>   
+            <!-- <box size="${wheel_width} ${wheel_radius*2} ${wheel_radius*2}" /> -->
+            <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+          </geometry>
+        </collision>
+        <inertial>
+          <origin xyz="0 0 0" rpy="0 ${-M_PI/2} 0" />
+          <mass value="${wheel_mass}" />
+          <xacro:cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" w="${wheel_width}" />
+        </inertial>
+   </link>
+
+       <!-- Forward right wheel -->
+
+  <joint name="fr_wheel_joint" type="continuous">
+        <parent link="base_link"/>
+        <child link="fr_wheel_link"/>
+        <origin xyz="${wheel_offset_x} ${-wheel_offset_y} ${wheel_offset_z}" rpy="0 0 ${-M_PI/2}" />
+        <axis xyz="-1 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="fr_wheel_link">
+        <visual>
+          <origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+          <geometry>
+            <!-- <mesh filename="package://robot_description/meshes/fr_wheel_link.STL" scale="1 1 1" /> -->
+            <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+          </geometry>
+          <material name="darkgrey" />
+        </visual>
+        <collision>
+          <origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+          <geometry>   
+            <!-- <box size="${wheel_width} ${wheel_radius*2} ${wheel_radius*2}" /> -->
+            <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+          </geometry>
+        </collision>
+        <inertial>
+          <origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+          <mass value="${wheel_mass}" />
+          <xacro:cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" w="${wheel_width}" />
+        </inertial>
+  </link>
+   <!-- rear left wheel -->
+
+   <joint name="rl_wheel_joint" type="continuous">
+    <parent link="base_link"/>
+    <child link="rl_wheel_link"/>
+    <origin xyz="${-wheel_offset_x} ${wheel_offset_y} ${wheel_offset_z}" rpy="0 0 ${M_PI/2}" />
+    <axis xyz="1 0 0" rpy="0 0 0"/>
+</joint>
+
+<link name="rl_wheel_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 ${-M_PI/2} 0" />
+      <geometry>
+        <!-- <mesh filename="package://robot_description/meshes/rl_wheel_link.STL" scale="1 1 1" /> -->
+        <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+      </geometry>
+      <material name="darkgrey" />
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 ${-M_PI/2} 0" />
+      <geometry>   
+        <!-- <box size="${wheel_width} ${wheel_radius*2} ${wheel_radius*2}" /> -->
+        <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+      </geometry>
+    </collision>
+    <inertial>
+      <origin xyz="0 0 0" rpy="0 ${-M_PI/2} 0" />
+      <mass value="${wheel_mass}" />
+      <xacro:cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" w="${wheel_width}" />
+    </inertial>
+</link>  
+
+    <!-- rear right wheel-->
+     
+    <joint name="rr_wheel_joint" type="continuous">
+      <parent link="base_link"/>
+      <child link="rr_wheel_link"/>
+      <origin xyz="${-wheel_offset_x} ${-wheel_offset_y} ${wheel_offset_z}" rpy="0 0 ${-M_PI/2}" />
+      <axis xyz="-1 0 0" rpy="0 0 0"/>
+  </joint>
+
+  <link name="rr_wheel_link">
+      <visual>
+        <origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+        <geometry>
+          <!-- <mesh filename="package://robot_description/meshes/rr_wheel_link.STL" scale="1 1 1" /> -->
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+        <material name="darkgrey" />
+      </visual>
+      <collision>
+        <origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+        <geometry>   
+          <!-- <box size="${wheel_width} ${wheel_radius*2} ${wheel_radius*2}" /> -->
+          <cylinder radius="${wheel_radius}" length="${wheel_width}" />
+        </geometry>
+      </collision>
+      <inertial>
+        <origin xyz="0 0 0" rpy="0 ${M_PI/2} 0" />
+        <mass value="${wheel_mass}" />
+        <xacro:cylinder_inertia m="${wheel_mass}" r="${wheel_radius}" w="${wheel_width}" />
+      </inertial>
+  </link>   
+</robot>

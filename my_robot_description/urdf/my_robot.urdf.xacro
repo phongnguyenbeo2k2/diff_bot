@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<robot name="my_robot" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+    <xacro:arg name="use_ros2_control" default="false"/>
+    <xacro:arg name="sim_mode" default="true"/>
+    <xacro:include filename="common_properties.xacro" />
+    <xacro:include filename="mobile_base.xacro" />
+    <xacro:include filename="mobile_base_gazebo.xacro" />
+    <!-- sensor -->
+    <!-- <xacro:include filename="camera.xacro" /> -->
+    <xacro:include filename="lidar.xacro" />
+    <!-- load control that is gazebo_control or ros2_control  -->
+    <xacro:if value="$(arg use_ros2_control)">
+        <xacro:include filename="ros2_control_gazebo.xacro"/>
+    </xacro:if>
+    <xacro:unless value="$(arg use_ros2_control)">
+        <xacro:include filename="gazebo_control.xacro"/>
+    </xacro:unless>
+</robot>
