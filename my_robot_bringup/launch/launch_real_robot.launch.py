@@ -90,11 +90,17 @@ def generate_launch_description():
     #         prefix='xterm -e',  # Mở trong một terminal mới nếu cần
     #         remappings=[('/cmd_vel', '/diff_cont/cmd_vel_unstamped')]
     # )
-
+    #spaw controller for imu_sensor_broadcaster
+    start_imu_broadcaster_cmd = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["imu_broadcaster"],
+    )
     return LaunchDescription([
         model_arg,
         robot_state_publisher,
         delayed_controller_manager,
         delayed_diff_drive_spawner,
-        delayed_joint_broad_spawner
+        delayed_joint_broad_spawner,
+        start_imu_broadcaster_cmd
     ])

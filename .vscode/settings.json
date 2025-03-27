@@ -83,5 +83,6 @@
         "typeindex": "cpp",
         "typeinfo": "cpp",
         "variant": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "/home/phong/work/ros2_ws/src/diffbot_firmware"
 }

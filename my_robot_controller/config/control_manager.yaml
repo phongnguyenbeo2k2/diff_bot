@@ -93,3 +93,14 @@ diff_cont:
 
 # joint_broad:
 #   ros__parameters:
+
+imu_broadcaster:
+  ros__parameters:
+
+    sensor_name: mpu6050
+    frame_id: imu_link
+   
+   # 500 data points used to calculated covariances
+    static_covariance_orientation: [1.8082e-06, 0.0, 0.0, 2.12629e-06, 0.0, 0.0, 4.25058e-08, 0.0, 0.0]
+    static_covariance_angular_velocity: [2.64598e-07, 0.0, 0.0, 4.76816e-07, 0.0, 0.0, 3.38328e-07, 0.0, 0.0]
+    static_covariance_linear_acceleration: [0.000201056, 0.0, 0.0, 0.000187677, 0.0, 0.0, 0.00050001, 0.0, 0.0]
