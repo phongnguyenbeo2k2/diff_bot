@@ -98,6 +98,8 @@ def generate_launch_description():
     )
     return LaunchDescription([
         model_arg,
+        declare_use_ros2_control_cmd,
+        declare_use_sim_time_cmd,
         robot_state_publisher,
         delayed_controller_manager,
         delayed_diff_drive_spawner,
