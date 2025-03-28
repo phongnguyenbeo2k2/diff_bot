@@ -20,7 +20,7 @@
 using hardware_interface::return_type;
 using hardware_interface::CallbackReturn;
 
-namespace mpu6050
+namespace mpu6050_driver
 {
 
 class MPU6050Hardware : public hardware_interface::SensorInterface
