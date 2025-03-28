@@ -6,6 +6,8 @@ controller_manager:
       type: joint_state_broadcaster/JointStateBroadcaster    
     diff_cont:
       type: diff_drive_controller/DiffDriveController    
+    imu_broadcaster:
+      type: imu_sensor_broadcaster/IMUSensorBroadcaster
 diff_cont:
   ros__parameters:
 
@@ -101,6 +103,6 @@ imu_broadcaster:
     frame_id: imu_link
    
    # 500 data points used to calculated covariances
-    static_covariance_orientation: [1.8082e-06, 0.0, 0.0, 2.12629e-06, 0.0, 0.0, 4.25058e-08, 0.0, 0.0]
-    static_covariance_angular_velocity: [2.64598e-07, 0.0, 0.0, 4.76816e-07, 0.0, 0.0, 3.38328e-07, 0.0, 0.0]
-    static_covariance_linear_acceleration: [0.000201056, 0.0, 0.0, 0.000187677, 0.0, 0.0, 0.00050001, 0.0, 0.0]
+    static_covariance_orientation: [4.13269e-05, 0.0, 0.0, 8.31052e-06, 0.0, 0.0, 5.62158e-05, 0.0, 0.0]
+    static_covariance_angular_velocity: [7.79311e-07, 0.0, 0.0, 1.58375e-05, 0.0, 0.0, 5.84149e-07, 0.0, 0.0]
+    static_covariance_linear_acceleration: [5.26377e-09, 0.0, 0.0, 0.00276203, 0.0, 0.0, 0.00208896, 0.0, 0.0]
