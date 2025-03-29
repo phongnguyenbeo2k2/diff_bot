@@ -1,6 +1,6 @@
 #include "mpu6050_driver/mpu6050_hardware_interface.hpp"
 
-namespace mpu6050
+namespace mpu6050_driver
 {
 
 // Initialize MPU6050 device
@@ -109,5 +109,5 @@ return_type MPU6050Hardware::read(const rclcpp::Time & /*time*/, const rclcpp::D
 #include "pluginlib/class_list_macros.hpp"
 
 PLUGINLIB_EXPORT_CLASS(
-	mpu6050::MPU6050Hardware,
+	mpu6050_driver::MPU6050Hardware,
 	hardware_interface::SensorInterface)
