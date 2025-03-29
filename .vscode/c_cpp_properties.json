@@ -7,6 +7,7 @@
       },
       "includePath": [
         "/home/phong/work/ros2_ws/install/robot_controller/include/**",
+        "/home/phong/work/ros2_ws/install/mpu6050_driver/include/**",
         "/home/phong/work/ros2_ws/install/diffbot_firmware/include/**",
         "/opt/ros/humble/include/**",
         "/home/phong/work/ros2_ws/src/diffbot_firmware/include/**",

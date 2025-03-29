@@ -10,6 +10,29 @@ find_package(ament_cmake REQUIRED)
 # uncomment the following section in order to fill in
 # further dependencies manually.
 # find_package(<dependency> REQUIRED)
+find_package(rclcpp REQUIRED)
+find_package(geometry_msgs REQUIRED)
+find_package(sensor_msgs REQUIRED)
+find_package(nav_msgs REQUIRED)
+find_package(tf2_ros REQUIRED)
+find_package(tf2 REQUIRED)
+find_package(std_msgs REQUIRED)
+
+include_directories(include)
+
+add_executable(own_odom_publisher src/own_odom_publisher.cpp)
+ament_target_dependencies(own_odom_publisher rclcpp sensor_msgs nav_msgs tf2 tf2_ros)
+
+install(
+  DIRECTORY include
+  DESTINATION include
+)
+
+install(TARGETS
+  own_odom_publisher
+  DESTINATION lib/${PROJECT_NAME}
+)
+
 install(
   DIRECTORY config
   DESTINATION share/${PROJECT_NAME}
