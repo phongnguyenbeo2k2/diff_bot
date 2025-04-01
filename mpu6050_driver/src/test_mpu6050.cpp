@@ -18,6 +18,12 @@ int main()
         device.getGyro(&gx, &gy, &gz);
         device.getAccel(&ax, &ay, &az);
         
+        std::cout << "Show angle:\n";
+        std::cout << "------------------\n";
+        std::cout << "roll: " << roll << std::endl;
+        std::cout << "pitch: " << pitch << std::endl;
+        std::cout << "yaw: " << yaw << std::endl;
+                
         std::cout << "Gyroscope:\n";
         std::cout << "------------------\n";
         std::cout << "X: " << gx << "\n";
