@@ -135,18 +135,18 @@ namespace diffbot_system
 
                 // uint8_t frame_data[14] = {0};
                 // std::memcpy((void *)frame_data, (void *)message.data(), message.size());
-                RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "raw received data: " << message);
-                RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"),"The amount of bytes are " << message.size());
+                // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "raw received data: " << message);
+                // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"),"The amount of bytes are " << message.size());
                 const uint8_t *frame_data = reinterpret_cast<const uint8_t *>(message.data());
-                RCLCPP_INFO(rclcpp::get_logger("DiffbotInterface"), "Data copy: %s",frame_data);
+                // RCLCPP_INFO(rclcpp::get_logger("DiffbotInterface"), "Data copy: %s",frame_data);
                 if (!message.empty()) {
-                    RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: " << message);
+                    // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: " << message);
                     float v_left;
                     float v_right;
                     int mutiplier = 1;
                     if (frame_data[0] == 'r')
                     {
-                        RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_right");
+                        // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_right");
                         v_right = *((float *)(frame_data + 2));
                         if(frame_data[1] == 'p')
                         {
@@ -160,7 +160,7 @@ namespace diffbot_system
                     }
                     if (frame_data[6] == 'l')
                     {
-                        RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_left");
+                        // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_left");
                         v_left = *((float *)(frame_data + 8));  
                         if(frame_data[7] == 'p')
                         {
