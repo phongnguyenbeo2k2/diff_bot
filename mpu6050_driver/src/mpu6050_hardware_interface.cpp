@@ -91,15 +91,15 @@ return_type MPU6050Hardware::read(const rclcpp::Time & /*time*/, const rclcpp::D
 	linear_accel_y = (double)accel_values[1];
 	linear_accel_z = (double)accel_values[2];
 	
-	std::cout << "=========================" << std::endl;
-	std::cout << "orientation.x: " << euler_angles[0]/ M_PI * 180 << std::endl;
-	std::cout << "orientation.y: " << euler_angles[1]/ M_PI * 180  << std::endl;
-	std::cout << "orientation.z: " << euler_angles[2] << std::endl;
+	// std::cout << "=========================" << std::endl;
+	// std::cout << "orientation.x: " << euler_angles[0]/ M_PI * 180 << std::endl;
+	// std::cout << "orientation.y: " << euler_angles[1]/ M_PI * 180  << std::endl;
+	// std::cout << "orientation.z: " << euler_angles[2] << std::endl;
 
-	std::cout << "linear.x: " << linear_accel_x << std::endl;
-	std::cout << "angular.z: " << angular_vel_z << std::endl;
+	// std::cout << "linear.x: " << linear_accel_x << std::endl;
+	// std::cout << "angular.z: " << angular_vel_z << std::endl;
 	
-	std::cout << "=========================" << std::endl;
+	// std::cout << "=========================" << std::endl;
 
 	return return_type::OK;
 }
