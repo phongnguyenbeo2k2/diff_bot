@@ -127,57 +127,95 @@ namespace diffbot_system
         try {
             if (rclcpp::ok() && stm32_.IsDataAvailable()) 
             {
-                auto dt = (rclcpp::Clock().now() - last_time_).seconds();            
-                // stm32_.FlushInputBuffer();
-                std::string message;
-                stm32_.ReadLine(message, '\n',1000);
-                // stm32_.FlushIOBuffers();
+                /*old method */
+                // auto dt = (rclcpp::Clock().now() - last_time_).seconds();            
+                // // stm32_.FlushInputBuffer();
+                //     std::string message;
+                //     stm32_.ReadLine(message, '\n',1000);
+                //     // stm32_.FlushIOBuffers();
 
-                // uint8_t frame_data[14] = {0};
-                // std::memcpy((void *)frame_data, (void *)message.data(), message.size());
-                // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "raw received data: " << message);
-                // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"),"The amount of bytes are " << message.size());
-                const uint8_t *frame_data = reinterpret_cast<const uint8_t *>(message.data());
-                // RCLCPP_INFO(rclcpp::get_logger("DiffbotInterface"), "Data copy: %s",frame_data);
-                if (!message.empty()) {
-                    // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: " << message);
-                    float v_left;
-                    float v_right;
-                    int mutiplier = 1;
-                    if (frame_data[0] == 'r')
+                //     // uint8_t frame_data[14] = {0};
+                //     // std::memcpy((void *)frame_data, (void *)message.data(), message.size());
+                //     // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "raw received data: " << message);
+                //     // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"),"The amount of bytes are " << message.size());
+                //     const uint8_t *frame_data = reinterpret_cast<const uint8_t *>(message.data());
+                //     // RCLCPP_INFO(rclcpp::get_logger("DiffbotInterface"), "Data copy: %s",frame_data);
+                //     if (!message.empty()) {
+                //         // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: " << message);
+                //         float v_left;
+                //         float v_right;
+                //         int mutiplier = 1;
+                //         if (frame_data[0] == 'r')
+                //         {
+                //             RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_right");
+                //             v_right = *((float *)(frame_data + 2));
+                //             if(frame_data[1] == 'p')
+                //             {
+                //                 mutiplier = 1;
+                //             }else if (frame_data[1] == 'n')
+                //             {
+                //                 mutiplier = -1;
+                //             }else if (frame_data[1] == 'z')
+                //             {
+                //                 mutiplier = 1;
+                //             }
+                //             velocity_states_.at(0) = mutiplier * (double)v_right;
+                //             position_states_.at(0) += velocity_states_.at(0) * dt; 
+                //             RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: v_right: " << v_right);
+                //         }
+                //         if (frame_data[6] == 'l')
+                //         {
+                //             RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_left");
+                //             v_left = *((float *)(frame_data + 8));  
+                //             if(frame_data[7] == 'p')
+                //             {
+                //                 mutiplier = 1;
+                //             }else if (frame_data[7] == 'n')
+                //             {
+                //                 mutiplier = -1;
+                //             }else if (frame_data[7] == 'z')
+                //             {
+                //                 mutiplier = 1;
+                //             }
+                //             velocity_states_.at(1) = mutiplier * (double)v_left;
+                //             position_states_.at(1) += velocity_states_.at(1) * dt;   
+                //             RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: v_left: " << v_left);                                   
+                //         }
+                //     } else {
+                //         RCLCPP_WARN_STREAM(rclcpp::get_logger("DiffbotInterface"), "Received an empty string.");
+                //     }
+                /*----------------------------------------------------------------------------------------------*/
+                /*new method*/
+                std::string message;
+                stm32_.ReadLine(message);
+                if (!(message.empty()))
+                {
+                    auto dt = (rclcpp::Clock().now() - last_time_).seconds();   
+                    std::stringstream ss(message);
+                    RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Received message: " << message);
+                    std::string res;
+                    int multiplier = 1;
+           
+                    while(std::getline(ss, res, ','))
                     {
-                        // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_right");
-                        v_right = *((float *)(frame_data + 2));
-                        if(frame_data[1] == 'p')
+                        multiplier = res.at(1) == 'p' ? 1 : -1;
+                
+                        if(res.at(0) == 'r')
                         {
-                            mutiplier = 1;
-                        }else 
-                        {
-                            mutiplier = -1;
+                            velocity_states_.at(0) = multiplier * std::stod(res.substr(2, res.size()));
+                            position_states_.at(0) += velocity_states_.at(0) * dt;
                         }
-                        velocity_states_.at(0) = mutiplier * (double)v_right;
-                        position_states_.at(0) += velocity_states_.at(0) * dt; 
-                    }
-                    if (frame_data[6] == 'l')
-                    {
-                        // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_left");
-                        v_left = *((float *)(frame_data + 8));  
-                        if(frame_data[7] == 'p')
+                        else if(res.at(0) == 'l')
                         {
-                            mutiplier = 1;
-                        }else 
-                        {
-                            mutiplier = -1;
+                            velocity_states_.at(1) = multiplier * std::stod(res.substr(2, res.size()));
+                            position_states_.at(1) += velocity_states_.at(1) * dt;
                         }
-                        velocity_states_.at(1) = mutiplier * (double)v_left;
-                        position_states_.at(1) += velocity_states_.at(1) * dt;                                      
                     }
-                    v_left = *((float *)(frame_data + 8));
-                    RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: v_left: " << v_left << " , v_right: " << v_right);
+                    last_time_ = rclcpp::Clock().now();
+                    RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: v_left: " << velocity_states_.at(1) << ", v_right: " << velocity_states_.at(0));   
                 } else {
                     RCLCPP_WARN_STREAM(rclcpp::get_logger("DiffbotInterface"), "Received an empty string.");
-                }
-               last_time_ = rclcpp::Clock().now();
+                } 
             }
         } catch (const LibSerial::ReadTimeout&) {
                 RCLCPP_WARN_STREAM(rclcpp::get_logger("DiffbotInterface"), "ReadLine timed out.");
@@ -253,7 +291,7 @@ namespace diffbot_system
         /*New method*/
         float v_right = (float)(velocity_commands_.at(0));
         float v_left = (float)(velocity_commands_.at(1));
-        RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Command velocity at write function: v_left: " << v_left << " , v_right: " << v_right);        
+        // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Command velocity at write function: v_left: " << v_left << " , v_right: " << v_right);        
         /*create frame for sending*/
         uint8_t frame_s[14];
         frame_s[12] = '\r';

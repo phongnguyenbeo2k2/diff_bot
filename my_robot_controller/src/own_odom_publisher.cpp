@@ -56,22 +56,22 @@ void SimpleOdomPublisher::jointCallback(const sensor_msgs::msg::JointState &msg)
   }
   else
   {
-    dp_left = msg.position.at(0) - left_wheel_prev_pos_;
-    dp_right = msg.position.at(1) - right_wheel_prev_pos_;
+    dp_left = msg.position.at(1) - left_wheel_prev_pos_;
+    dp_right = msg.position.at(0) - right_wheel_prev_pos_;
   }
 
   rclcpp::Time msg_time =  msg.header.stamp;
   rclcpp::Duration dt = msg_time - prev_time_;
 
-  left_wheel_prev_pos_ = msg.position.at(0);
-  right_wheel_prev_pos_ = msg.position.at(1);
+  left_wheel_prev_pos_ = msg.position.at(1);
+  right_wheel_prev_pos_ = msg.position.at(0);
   prev_time_ = msg_time;
 
   // double fi_left = dp_left / dt.seconds();
   // double fi_right = dp_right / dt.seconds();
 
-  double fi_left = msg.velocity.at(0);
-  double fi_right = msg.velocity.at(1);
+  double fi_left = msg.velocity.at(1);
+  double fi_right = msg.velocity.at(0);
 
   double linear = (wheel_radius_ * fi_right + wheel_radius_ * fi_left) / 2;
   double angular = (wheel_radius_ * fi_right - wheel_radius_ * fi_left) / wheel_separation_;
@@ -80,11 +80,13 @@ void SimpleOdomPublisher::jointCallback(const sensor_msgs::msg::JointState &msg)
   double d_theta = (wheel_radius_ * dp_right - wheel_radius_ * dp_left) / wheel_separation_;
 
 
-  //RCLCPP_INFO_STREAM(get_logger(), "theta: " << theta_ / M_1_PI * 180);
-
   x_ += d_s * cos(theta_ + d_theta/2);
   y_ += d_s * sin(theta_ + d_theta/2);
 
+  RCLCPP_INFO_STREAM(get_logger(), "x: " << x_);
+  RCLCPP_INFO_STREAM(get_logger(), "y: " << y_);
+  RCLCPP_INFO_STREAM(get_logger(), "theta: " << theta_ / M_1_PI * 180);
+  
   theta_ += d_theta;
   if (theta_ >= 2*M_PI)
   {

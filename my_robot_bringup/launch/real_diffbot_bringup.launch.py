@@ -45,6 +45,7 @@ def generate_launch_description():
     )
     controler_yaml_file = os.path.join(get_package_share_directory('my_robot_controller'),'config', 'control_manager.yaml')
     ekf_yaml_file = os.path.join(get_package_share_directory('my_robot_controller'),'config', 'ekf.yaml')
+    launch_lidar_and_filter_path = os.path.join(get_package_share_directory('my_robot_bringup'),'launch','launch_filter_lidar.launch.py')   
     #Include gazebo launch file, provided by gazebo_ros package
     controller_manager= Node(
         package="controller_manager",
@@ -109,7 +110,9 @@ def generate_launch_description():
         output="screen",
         parameters=[ekf_yaml_file],
     )
-        
+    #Launch lidar 
+    filter_lidar = IncludeLaunchDescription(PythonLaunchDescriptionSource(launch_lidar_and_filter_path))
+
     return LaunchDescription([
         model_arg,
         declare_use_ros2_control_cmd,
@@ -120,5 +123,6 @@ def generate_launch_description():
         delayed_joint_broad_spawner,
         delayed_imu_broadcaster_spawner,
         start_odom_publisher,
-        start_robot_localization_cmd
+        start_robot_localization_cmd,
+        filter_lidar
     ])
