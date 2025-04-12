@@ -14,7 +14,7 @@ SimpleOdomPublisher::SimpleOdomPublisher(const std::string& name)
                                   , first_time_pub_(true)
 {
     declare_parameter("wheel_radius", 0.0362);
-    declare_parameter("wheel_separation", 0.184);
+    declare_parameter("wheel_separation", 0.23);
 
     wheel_radius_ = get_parameter("wheel_radius").as_double();
     wheel_separation_ = get_parameter("wheel_separation").as_double();
@@ -82,10 +82,6 @@ void SimpleOdomPublisher::jointCallback(const sensor_msgs::msg::JointState &msg)
 
   x_ += d_s * cos(theta_ + d_theta/2);
   y_ += d_s * sin(theta_ + d_theta/2);
-
-  RCLCPP_INFO_STREAM(get_logger(), "x: " << x_);
-  RCLCPP_INFO_STREAM(get_logger(), "y: " << y_);
-  RCLCPP_INFO_STREAM(get_logger(), "theta: " << theta_ / M_1_PI * 180);
   
   theta_ += d_theta;
   if (theta_ >= 2*M_PI)
@@ -96,7 +92,10 @@ void SimpleOdomPublisher::jointCallback(const sensor_msgs::msg::JointState &msg)
   {
     theta_ += 2*M_PI;
   }
-  
+
+  RCLCPP_INFO_STREAM(get_logger(), "x: " << x_);
+  RCLCPP_INFO_STREAM(get_logger(), "y: " << y_);
+  RCLCPP_INFO_STREAM(get_logger(), "theta: " << theta_* 180/ M_PI);
 
   tf2::Quaternion q;
   q.setRPY(0, 0, theta_);

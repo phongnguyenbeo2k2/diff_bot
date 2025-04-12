@@ -37,6 +37,13 @@ namespace diffbot_system
         std::vector<double> position_states_;
         std::vector<double> velocity_states_;
         rclcpp::Time last_time_;
+        /* new method use pulse from encoder for odometry*/
+        int rev_enc;
+        double left_pos;
+        double right_pos;
+        double left_vel;
+        double right_vel;
+
     };
 }
 #endif

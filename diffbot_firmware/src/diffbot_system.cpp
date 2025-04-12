@@ -8,7 +8,7 @@ namespace diffbot_system
 {
     DiffbotInterface::DiffbotInterface()
     {
-
+        rev_enc = 330;
     }
 
     DiffbotInterface::~DiffbotInterface()
@@ -87,7 +87,8 @@ namespace diffbot_system
         velocity_commands_ = {0.0, 0.0};
         position_states_ = {0.0, 0.0};
         velocity_states_ = {0.0, 0.0};
-
+        left_pos = 0;
+        right_pos = 0;
         try
         {
             stm32_.Open(port_);
@@ -127,95 +128,76 @@ namespace diffbot_system
         try {
             if (rclcpp::ok() && stm32_.IsDataAvailable()) 
             {
-                /*old method */
-                // auto dt = (rclcpp::Clock().now() - last_time_).seconds();            
-                // // stm32_.FlushInputBuffer();
-                //     std::string message;
-                //     stm32_.ReadLine(message, '\n',1000);
-                //     // stm32_.FlushIOBuffers();
-
-                //     // uint8_t frame_data[14] = {0};
-                //     // std::memcpy((void *)frame_data, (void *)message.data(), message.size());
-                //     // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "raw received data: " << message);
-                //     // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"),"The amount of bytes are " << message.size());
-                //     const uint8_t *frame_data = reinterpret_cast<const uint8_t *>(message.data());
-                //     // RCLCPP_INFO(rclcpp::get_logger("DiffbotInterface"), "Data copy: %s",frame_data);
-                //     if (!message.empty()) {
-                //         // RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: " << message);
-                //         float v_left;
-                //         float v_right;
-                //         int mutiplier = 1;
-                //         if (frame_data[0] == 'r')
-                //         {
-                //             RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_right");
-                //             v_right = *((float *)(frame_data + 2));
-                //             if(frame_data[1] == 'p')
-                //             {
-                //                 mutiplier = 1;
-                //             }else if (frame_data[1] == 'n')
-                //             {
-                //                 mutiplier = -1;
-                //             }else if (frame_data[1] == 'z')
-                //             {
-                //                 mutiplier = 1;
-                //             }
-                //             velocity_states_.at(0) = mutiplier * (double)v_right;
-                //             position_states_.at(0) += velocity_states_.at(0) * dt; 
-                //             RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: v_right: " << v_right);
-                //         }
-                //         if (frame_data[6] == 'l')
-                //         {
-                //             RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Detected v_left");
-                //             v_left = *((float *)(frame_data + 8));  
-                //             if(frame_data[7] == 'p')
-                //             {
-                //                 mutiplier = 1;
-                //             }else if (frame_data[7] == 'n')
-                //             {
-                //                 mutiplier = -1;
-                //             }else if (frame_data[7] == 'z')
-                //             {
-                //                 mutiplier = 1;
-                //             }
-                //             velocity_states_.at(1) = mutiplier * (double)v_left;
-                //             position_states_.at(1) += velocity_states_.at(1) * dt;   
-                //             RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: v_left: " << v_left);                                   
-                //         }
-                //     } else {
-                //         RCLCPP_WARN_STREAM(rclcpp::get_logger("DiffbotInterface"), "Received an empty string.");
-                //     }
-                /*----------------------------------------------------------------------------------------------*/
                 /*new method*/
+
                 std::string message;
                 stm32_.ReadLine(message);
-                if (!(message.empty()))
-                {
-                    auto dt = (rclcpp::Clock().now() - last_time_).seconds();   
+                /*Calculate odom based velocity*/
+                // if (!(message.empty()))
+                // {
+                //     auto dt = (rclcpp::Clock().now() - last_time_).seconds();   
+                //     std::stringstream ss(message);
+                //     RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Received message: " << message);
+                //     std::string res;
+                //     int multiplier = 1;
+           
+                //     while(std::getline(ss, res, ','))
+                //     {
+                //         multiplier = res.at(1) == 'p' ? 1 : -1;
+                
+                //         if(res.at(0) == 'r')
+                //         {
+                //             velocity_states_.at(0) = multiplier * std::stod(res.substr(2, res.size()));
+                //             position_states_.at(0) += velocity_states_.at(0) * dt;
+                //         }
+                //         else if(res.at(0) == 'l')
+                //         {
+                //             velocity_states_.at(1) = multiplier * std::stod(res.substr(2, res.size()));
+                //             position_states_.at(1) += velocity_states_.at(1) * dt;
+                //         }
+                //     }
+                //     last_time_ = rclcpp::Clock().now();
+                //     RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: v_left: " << velocity_states_.at(1) << ", v_right: " << velocity_states_.at(0));   
+                // } else {
+                //     RCLCPP_WARN_STREAM(rclcpp::get_logger("DiffbotInterface"), "Received an empty string.");
+                // } 
+                /*Calculate odom by pulse of encoder*/
+                if (!message.empty()) {
+                    auto now = rclcpp::Clock().now();
+                    double dt = (now - last_time_).seconds();
+            
                     std::stringstream ss(message);
                     RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Received message: " << message);
+                    int sum_left = 0;
+                    int sum_right = 0;
+                    double previous_r_pos = right_pos;
+                    double previous_l_pos = left_pos;
                     std::string res;
-                    int multiplier = 1;
-           
-                    while(std::getline(ss, res, ','))
-                    {
-                        multiplier = res.at(1) == 'p' ? 1 : -1;
-                
-                        if(res.at(0) == 'r')
-                        {
-                            velocity_states_.at(0) = multiplier * std::stod(res.substr(2, res.size()));
-                            position_states_.at(0) += velocity_states_.at(0) * dt;
+                    while (std::getline(ss, res, ',')) {
+                        // tách tiền tố 'r' hoặc 'l'
+                        char wheel = res.at(0);
+                        int ticks = std::stoll(res.substr(1));  // bỏ ký tự đầu tiên
+                        if (wheel == 'r') {
+                            sum_right = ticks;
+                            position_states_.at(0) = sum_right*(2*M_PI/rev_enc);
+                            right_pos = sum_right*(2*M_PI/rev_enc);
+                        } else if (wheel == 'l') {
+                            sum_left= ticks;
+                            position_states_.at(1) = sum_left*(2*M_PI/rev_enc);
+                            left_pos = sum_left*(2*M_PI/rev_enc);
                         }
-                        else if(res.at(0) == 'l')
-                        {
-                            velocity_states_.at(1) = multiplier * std::stod(res.substr(2, res.size()));
-                            position_states_.at(1) += velocity_states_.at(1) * dt;
-                        }
-                    }
-                    last_time_ = rclcpp::Clock().now();
-                    RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Data received: v_left: " << velocity_states_.at(1) << ", v_right: " << velocity_states_.at(0));   
+                    }  
+                    velocity_states_.at(0) = (right_pos - previous_r_pos) / dt;
+                    velocity_states_.at(1) = (left_pos - previous_l_pos) / dt;
+                    last_time_ = now;
+                    RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Sum right: " << sum_right << ", Sum left: " << sum_left);
+                    RCLCPP_INFO_STREAM(rclcpp::get_logger("DiffbotInterface"), "Currrent right pos: " << left_pos << ", Current left position: " << right_pos);
                 } else {
-                    RCLCPP_WARN_STREAM(rclcpp::get_logger("DiffbotInterface"), "Received an empty string.");
-                } 
+                    RCLCPP_WARN_STREAM(
+                        rclcpp::get_logger("DiffbotInterface"),
+                        "Received an empty string from STM32."
+                    );
+                }
             }
         } catch (const LibSerial::ReadTimeout&) {
                 RCLCPP_WARN_STREAM(rclcpp::get_logger("DiffbotInterface"), "ReadLine timed out.");
@@ -223,37 +205,6 @@ namespace diffbot_system
                 RCLCPP_ERROR_STREAM(rclcpp::get_logger("DiffbotInterface"), "Error reading from serial: " << e.what());
         }
 
-        /*Old method*/
-        // if(rclcpp::ok && stm32_.IsDataAvailable())
-        // {
-        //     auto dt = (rclcpp::Clock().now() - last_time_).seconds();
-
-        //     std::string message;
-        //     stm32_.ReadLine(message);
-        //     std::stringstream ss(message);
-        //     std::string res;
-        //     int multiplier = 1;
-        //     while (std::getline(ss, res, ','))
-        //     {
-        //         if (res.at(1) == 'p')
-        //         {
-        //             multiplier = 1;
-        //         }else 
-        //         {
-        //             multiplier = -1;
-        //         }
-        //         if (res.at(0) == 'r')
-        //         {
-        //             velocity_states_.at(0) = multiplier * std::stod(res.substr(2, res.size()));
-        //             position_states_.at(0) += velocity_states_.at(0) * dt; 
-        //         }else if (res.at(0) == 'l')
-        //         {
-        //             velocity_states_.at(1) = multiplier * std::stod(res.substr(2, res.size()));
-        //             position_states_.at(1) += velocity_states_.at(1) * dt;
-        //         }
-        //     }
-        //     last_time_ = rclcpp::Clock().now();
-        // }
         return hardware_interface::return_type::OK;
     }
 
