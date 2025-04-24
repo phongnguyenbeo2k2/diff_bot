@@ -20,9 +20,9 @@ int main()
         
         std::cout << "Show angle:\n";
         std::cout << "------------------\n";
-        std::cout << "roll: " << roll << std::endl;
-        std::cout << "pitch: " << pitch << std::endl;
-        std::cout << "yaw: " << yaw << std::endl;
+        std::cout << "roll: " << (roll * 180) / M_PI << std::endl;
+        std::cout << "pitch: " << (pitch * 180) / M_PI << std::endl;
+        std::cout << "yaw: " << (yaw * 180) / M_PI << std::endl;
                 
         std::cout << "Gyroscope:\n";
         std::cout << "------------------\n";

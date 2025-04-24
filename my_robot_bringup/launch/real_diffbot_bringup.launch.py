@@ -85,31 +85,31 @@ def generate_launch_description():
         )
     )
     # start imu_broadcaster to handle data from MPU6050
-    start_imu_broadcaster_cmd = Node(
-        package="controller_manager",
-        executable="spawner",
-        arguments=["imu_broadcaster"],
-    )
+    # start_imu_broadcaster_cmd = Node(
+    #     package="controller_manager",
+    #     executable="spawner",
+    #     arguments=["imu_broadcaster"],
+    # )
 
-    delayed_imu_broadcaster_spawner = RegisterEventHandler(
-        event_handler=OnProcessStart(
-            target_action=controller_manager,
-            on_start=[start_imu_broadcaster_cmd],
-        )
-    )
+    # delayed_imu_broadcaster_spawner = RegisterEventHandler(
+    #     event_handler=OnProcessStart(
+    #         target_action=controller_manager,
+    #         on_start=[start_imu_broadcaster_cmd],
+    #     )
+    # )
     #start own odom publsiher node 
     start_odom_publisher = Node(
         package="my_robot_controller",
         executable="own_odom_publisher"
     )
     #start extended kalman filter node fro mrobot localization package
-    start_robot_localization_cmd = Node(
-        package="robot_localization",
-        executable="ekf_node",
-        name="ekf_filter_node",
-        output="screen",
-        parameters=[ekf_yaml_file],
-    )
+    # start_robot_localization_cmd = Node(
+    #     package="robot_localization",
+    #     executable="ekf_node",
+    #     name="ekf_filter_node",
+    #     output="screen",
+    #     parameters=[ekf_yaml_file],
+    # )
     #Launch lidar 
     filter_lidar = IncludeLaunchDescription(PythonLaunchDescriptionSource(launch_lidar_and_filter_path))
 
@@ -121,8 +121,8 @@ def generate_launch_description():
         delayed_controller_manager,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
-        delayed_imu_broadcaster_spawner,
+        # delayed_imu_broadcaster_spawner,
         start_odom_publisher,
-        start_robot_localization_cmd,
+        # start_robot_localization_cmd,
         filter_lidar
     ])

@@ -12,8 +12,8 @@ ekf_filter_node:
       odom0: /diffbot/own_odom
       odom0_differential: true 
 
-      # imu0: imu_broadcaster/imu
-      # imu0_differntial: true 
+      imu0: /imu_broadcaster/imu
+      imu0_differntial: true 
 
       # If you're having trouble, try setting this to true, and then echo the /diagnostics_agg topic to see if the node is unhappy with any settings or data.
       print_diagnostics: true
@@ -32,11 +32,11 @@ ekf_filter_node:
                      false, false, false,
                      false, false, false]
 
-      # imu0_config: [false, false, false,
-      #               false, false, false,
-      #               false, false, false,
-      #               false, false, true,
-      #               true , false, false]
+      imu0_config: [false, false, false,
+                    false, false, false,
+                    false, false, false,
+                    false, false, true,
+                    true , false, false]
 
       # LIDAR BOT
       # odom0_config: [ false, false, false,

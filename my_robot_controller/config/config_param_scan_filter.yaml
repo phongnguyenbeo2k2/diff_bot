@@ -1,12 +1,41 @@
 scan_to_scan_filter_chain:
  ros__parameters:
-   filter1:
-     name: angle2
-     type: laser_filters/LaserScanAngularBoundsFilter
-     params:
-       lower_angle: -1.52
-       upper_angle: 1.52
-   filter2:
+    filter1:
+      type: laser_filters/LaserArrayFilter
+      name: median
+      params: 
+        range_filter_chain:
+          filter1: 
+            name: median
+            type: filters/MultiChannelMedianFilterFloat 
+            params:
+              number_of_observations: 5
+              unused: 10
+        intensity_filter_chain:
+          filter1:
+            name: median
+            type: filters/MultiChannelMedianFilterFloat 
+            params:
+              number_of_observations: 5
+              unused: 10
+    filter2:
+      name: shadows
+      type: laser_filters/ScanShadowsFilter
+      params:
+        min_angle: 10.
+        max_angle: 170.
+        neighbors: 20
+        window: 1
+        remove_shadow_start_point: true
+        remove_shadow_end_point: true
+    # filter3:
+    #   name: dark_shadows
+    #   type: laser_filters/LaserScanIntensityFilter
+    #   params: 
+    #     lower_threshold: 100.
+    #     upper_threshold: 10000.
+    #     disp_histogram: 0
+    filter4:
      name: box_filter
      type: laser_filters/LaserScanRangeFilter
      params:
@@ -15,4 +44,3 @@ scan_to_scan_filter_chain:
        upper_threshold: 3.5              # if not specified defaults to 100000.0
        lower_replacement_value: -.inf    # if not specified defaults to NaN
        upper_replacement_value: .inf     # if not specified defaults to NaN
-    

@@ -26,13 +26,13 @@
 
 //Offsets - supply your own here (calculate offsets with getOffsets function)
 //    Gyroscope
-#define G_OFF_X 215.653f
-#define G_OFF_Y 3.29064f
-#define G_OFF_Z -35.30114f
+#define G_OFF_X -463.473f
+#define G_OFF_Y -246.054f
+#define G_OFF_Z -38.3168f
 //     Accelerometer
-#define A_OFF_X 32767.9f
-#define A_OFF_Y -2253.826f
-#define A_OFF_Z -15320.24f
+#define A_OFF_X -5830.84f
+#define A_OFF_Y  32646.9f
+#define A_OFF_Z -9287.39f
 
 //-----------------------END MODIFY THESE PARAMETERS-----------------------
 

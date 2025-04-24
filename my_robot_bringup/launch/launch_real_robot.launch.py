@@ -91,16 +91,16 @@ def generate_launch_description():
     #         remappings=[('/cmd_vel', '/diff_cont/cmd_vel_unstamped')]
     # )
     #spaw controller for imu_sensor_broadcaster
-    # start_imu_broadcaster_cmd = Node(
-    #     package="controller_manager",
-    #     executable="spawner",
-    #     arguments=["imu_broadcaster"],
-    # )
-    #start own odom publsiher node 
-    start_odom_publisher = Node(
-        package="my_robot_controller",
-        executable="own_odom_publisher"
+    start_imu_broadcaster_cmd = Node(
+        package="controller_manager",
+        executable="spawner",
+        arguments=["imu_broadcaster"],
     )
+    #start own odom publsiher node 
+    # start_odom_publisher = Node(
+    #     package="my_robot_controller",
+    #     executable="own_odom_publisher"
+    # )
     return LaunchDescription([
         model_arg,
         declare_use_ros2_control_cmd,
@@ -109,6 +109,6 @@ def generate_launch_description():
         delayed_controller_manager,
         delayed_diff_drive_spawner,
         delayed_joint_broad_spawner,
-        # start_imu_broadcaster_cmd,
-        start_odom_publisher
+        start_imu_broadcaster_cmd
+        # start_odom_publisher
     ])

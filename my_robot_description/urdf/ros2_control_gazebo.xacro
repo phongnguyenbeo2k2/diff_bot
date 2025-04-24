@@ -27,7 +27,7 @@
         </ros2_control>
 
         <!-- MPU6050 sensor not use in PC--> 
-        <ros2_control name='MPU6050' type='sensor'>
+        <!-- <ros2_control name='MPU6050' type='sensor'>
             <hardware>
               <plugin>mpu6050_driver/MPU6050Hardware</plugin>
                 <param name='sensor_name'>mpu6050</param>
@@ -45,7 +45,7 @@
               <state_interface name='linear_acceleration.y'/>
               <state_interface name='linear_acceleration.z'/>  
             </sensor>
-          </ros2_control>
+          </ros2_control> -->
     </xacro:unless>
 
     <!-- use simulate ros2 control -->
