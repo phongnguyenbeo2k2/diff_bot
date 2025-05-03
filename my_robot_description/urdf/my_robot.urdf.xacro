@@ -10,7 +10,11 @@
     <!-- sensor -->
     <!-- <xacro:include filename="camera.xacro" /> -->
     <!-- <xacro:include filename="lidar.xacro" /> -->
-    <xacro:include filename="lidar_v2.xacro" />
+
+    <!-- simulate lidar with 24 data elements -->
+    <!-- <xacro:include filename="lidar_v2.xacro" /> -->
+    <!-- simulate lidar with full data -->
+    <xacro:include filename="lidar_v3.xacro" />
     <!-- load control that is gazebo_control or ros2_control  -->
     <xacro:if value="$(arg use_ros2_control)">
         <xacro:include filename="ros2_control_gazebo.xacro"/>

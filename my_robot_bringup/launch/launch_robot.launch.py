@@ -88,13 +88,13 @@ def generate_launch_description():
     # )
 
 
-    rviz2 = Node(
-            package='rviz2',
-            executable='rviz2',
-            name='rviz2',
-            output='screen',
-            arguments=['-d', os.path.join(get_package_share_directory('my_robot_description'),'rviz',"my_robot_config.rviz")]  # Đường dẫn tới file cấu hình RViz (nếu có)
-    )
+    # rviz2 = Node(
+    #         package='rviz2',
+    #         executable='rviz2',
+    #         name='rviz2',
+    #         output='screen',
+    #         arguments=['-d', os.path.join(get_package_share_directory('my_robot_description'),'rviz',"my_robot_config.rviz")]  # Đường dẫn tới file cấu hình RViz (nếu có)
+    # )
     return LaunchDescription([
         model_arg,
         declare_use_sim_time_cmd,
@@ -106,5 +106,5 @@ def generate_launch_description():
         joint_broad_spawner,
         # teleop_node,
         # original_teleop_node,
-        rviz2
+        # rviz2
     ])
