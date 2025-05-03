@@ -23,6 +23,9 @@ include_directories(include)
 add_executable(own_odom_publisher src/own_odom_publisher.cpp)
 ament_target_dependencies(own_odom_publisher rclcpp sensor_msgs nav_msgs tf2 tf2_ros)
 
+add_executable(trajectory_drawer src/trajectory_drawer.cpp)
+ament_target_dependencies(trajectory_drawer rclcpp nav_msgs geometry_msgs)
+
 install(
   DIRECTORY include
   DESTINATION include
@@ -30,6 +33,7 @@ install(
 
 install(TARGETS
   own_odom_publisher
+  trajectory_drawer
   DESTINATION lib/${PROJECT_NAME}
 )
 
