@@ -102,6 +102,13 @@ def generate_launch_description():
         package="my_robot_controller",
         executable="own_odom_publisher"
     )
+    start_trajectory_drawer = Node(
+        package="my_robot_controller",
+        executable="trajectory_drawer",
+        parameters=[{
+            'odom_topic_name': '/diffbot/own_odom'
+        }]
+    )
     #start extended kalman filter node fro mrobot localization package
     # start_robot_localization_cmd = Node(
     #     package="robot_localization",
@@ -124,5 +131,6 @@ def generate_launch_description():
         # delayed_imu_broadcaster_spawner,
         start_odom_publisher,
         # start_robot_localization_cmd,
-        filter_lidar
+        filter_lidar,
+        start_trajectory_drawer
     ])
